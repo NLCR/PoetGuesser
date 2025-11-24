@@ -8,3 +8,12 @@ Recognition is based on a feature set combining delexicalized linguistic feature
 ## Key features
 - Built-in SVC model, but any kind of sklearn model may be used 
 - Pretrained models for a number of Czech poets and most frequent poetic meters (given that poetic meters are of immense effect on vocabulary, recognition is always based on texts written in a single meter)
+
+## Roles
+- Petr Plecháč - principal programmer (nebo něco podobného)
+ 
+## Dedication
+National Library of the Czech Republic
+Realized with the support of institutional research of National Library of the Czech Republic funded by Ministry of Culture of the Czech Republic as part of the framework of Longterm conception developement of scientific organization, DKRVO, 9: Digital Humanities.
+Trained on data from the Institute for Czech Literature of the Czech Academy of Sciences.
+
