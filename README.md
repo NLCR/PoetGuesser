@@ -13,7 +13,7 @@ Recognition is based on a feature set combining delexicalized linguistic feature
 - Petr Plecháč - principal programmer (nebo něco podobného)
  
 ## Dedication
-National Library of the Czech Republic
+National Library of the Czech Republic.
 Realized with the support of institutional research of National Library of the Czech Republic funded by Ministry of Culture of the Czech Republic as part of the framework of Longterm conception developement of scientific organization, DKRVO, 9: Digital Humanities.
 Trained on data from the Institute for Czech Literature of the Czech Academy of Sciences.
 
