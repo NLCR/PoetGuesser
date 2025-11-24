@@ -7,6 +7,7 @@ import unicodedata
 from collections import Counter
 import pandas as pd
 from sklearn.svm import SVC
+from urllib.request import urlretrieve
 
 
 class PoetGuesser:
@@ -46,12 +47,14 @@ class PoetGuesser:
         Params:
             base_url_ingram (str)   : base url of Ingram API (to retrieve poetic meter and rhythmical bitstrings)
             base_url_udpipe (str)   : base url of UDPipe API (to retrieve poetic meter and rhythmical bitstrings)
+            base_url_data   (str)   : base url of candidate datasets
             min_score       (float) : minimum score for meter to be considered the meter of the input document(s)
         Returns:
             None
         '''
         self.base_url_ingram_ = base_url_ingram
         self.base_url_udpipe_ = base_url_udpipe
+        self._file_urls()
         self.min_score_       = min_score
         self.dataset_dir_     = files(__package__) / 'data'
         with open(files(__package__) / 'samplelist.json') as f:
@@ -401,6 +404,19 @@ class PoetGuesser:
         Returns:
             None
         '''
+        if not os.path.exists(self.dataset_dir_):
+            os.mkdir(self.dataset_dir_)
+        if not os.path.exists (os.path.join(self.dataset_dir_, f'{meter}_{sample_size}.pkl')):
+            print('⬇️ Downloading candidate dataset...')
+            urlretrieve(
+                self.file_urls_[f'{meter}_{sample_size}.pkl'] + '/download', 
+                os.path.join(self.dataset_dir_ / f'tmp_{meter}_{sample_size}.pkl')
+            )
+            os.rename(
+                os.path.join(self.dataset_dir_ / f'tmp_{meter}_{sample_size}.pkl'),
+                os.path.join(self.dataset_dir_ / f'{meter}_{sample_size}.pkl')
+            )
+            print('✅ Downloading complete')
         self.dataset_ = pd.read_pickle(self.dataset_dir_ / f'{meter}_{sample_size}.pkl')
         cols_to_keep = []
         if v_ngram == 1:
@@ -484,3 +500,55 @@ class PoetGuesser:
             clf = SVC(kernel='linear', C=1)
         clf.fit(X_train, y_train)
         return clf.predict(X_target)[0]
+    
+
+    def _file_urls(self):
+        '''
+        Define candidate author file URLs
+        '''
+        self.file_urls_ = {
+            'd8_50.pkl': 'https://data.ucl.cas.cz/s/XTDy5ytaPZSjYYR',
+            'i10_100.pkl': 'https://data.ucl.cas.cz/s/6kQgwg2xAGXwTWL',
+            'i10_200.pkl': 'https://data.ucl.cas.cz/s/d4xkTQH4gw8A9TM',
+            'i10_50.pkl': 'https://data.ucl.cas.cz/s/fN2RDMSLWpXoLY2',
+            'i11_100.pkl': 'https://data.ucl.cas.cz/s/zf3iAWbmet6mY6G',
+            'i11_200.pkl': 'https://data.ucl.cas.cz/s/Bpmesp3DEmNL5W4',
+            'i11_50.pkl': 'https://data.ucl.cas.cz/s/Z8ZySJEBW7oTaZk',
+            'i12_100.pkl': 'https://data.ucl.cas.cz/s/2r9bWi2CnJE34DL',
+            'i12_50.pkl': 'https://data.ucl.cas.cz/s/T37qYT3raSceEnA',
+            'i13_100.pkl': 'https://data.ucl.cas.cz/s/ZBMYYNt3wk256MR',
+            'i13_200.pkl': 'https://data.ucl.cas.cz/s/djAFL5WTFizTMr7',
+            'i13_50.pkl': 'https://data.ucl.cas.cz/s/jmBE3HwA2MpzCkj',
+            'i5_50.pkl': 'https://data.ucl.cas.cz/s/Hm4yNo5FcQ7DmfA',
+            'i6_100.pkl': 'https://data.ucl.cas.cz/s/nKH82k2zSS2SqQz',
+            'i6_50.pkl': 'https://data.ucl.cas.cz/s/PkXa4arR7bx3W2H',
+            'i7_100.pkl': 'https://data.ucl.cas.cz/s/TNrj6cGLkZoKMDb',
+            'i7_50.pkl': 'https://data.ucl.cas.cz/s/3eERcz3LkcePPob',
+            'i8_100.pkl': 'https://data.ucl.cas.cz/s/HqpZc2RiEc9Nx7K',
+            'i8_200.pkl': 'https://data.ucl.cas.cz/s/JfHpfRZYyCtQ5KY',
+            'i8_50.pkl': 'https://data.ucl.cas.cz/s/Wp2SenxSYXXZmCs',
+            'i9_100.pkl': 'https://data.ucl.cas.cz/s/RYRwQ9DrCF2Q6QA',
+            'i9_200.pkl': 'https://data.ucl.cas.cz/s/jiyxPG4WEGTCMfw',
+            'i9_50.pkl': 'https://data.ucl.cas.cz/s/5FFBHzC425nd9Yw',
+            't10_100.pkl': 'https://data.ucl.cas.cz/s/tZ9ZGMkQoAG2QNS',
+            't10_200.pkl': 'https://data.ucl.cas.cz/s/fr5SKixoQbSjAsX',
+            't10_50.pkl': 'https://data.ucl.cas.cz/s/TJmWdKPTk2fRrYj',
+            't11_100.pkl': 'https://data.ucl.cas.cz/s/5Lj8eziyMSpJ9m4',
+            't11_50.pkl': 'https://data.ucl.cas.cz/s/ZQ63Q67AAd35eaL',
+            't12_100.pkl': 'https://data.ucl.cas.cz/s/FFH9eP2HTadXenW',
+            't12_200.pkl': 'https://data.ucl.cas.cz/s/3qsEP67BPX6zGoX',
+            't12_50.pkl': 'https://data.ucl.cas.cz/s/ExxAmmAcHxs4J9P',
+            't5_50.pkl': 'https://data.ucl.cas.cz/s/Yg36fLC2BZyq8bq',
+            't6_100.pkl': 'https://data.ucl.cas.cz/s/xTwdzAjHQaWcWXg',
+            't6_200.pkl': 'https://data.ucl.cas.cz/s/eNTJffBxyfw6NFe',
+            't6_50.pkl': 'https://data.ucl.cas.cz/s/2g4kMjfrQq4ARGY',
+            't7_100.pkl': 'https://data.ucl.cas.cz/s/gfF86dNfFMMwsjc',
+            't7_200.pkl': 'https://data.ucl.cas.cz/s/NnoZ3iXpdPA3Q29',
+            't7_50.pkl': 'https://data.ucl.cas.cz/s/6qgTkN644p78ZH3',
+            't8_100.pkl': 'https://data.ucl.cas.cz/s/5DwGr7SH3ypCsRx',
+            't8_200.pkl': 'https://data.ucl.cas.cz/s/rTNCF5BeGPJLtrT',
+            't8_50.pkl': 'https://data.ucl.cas.cz/s/mY3gP2bf5MmAJex',
+            't9_100.pkl': 'https://data.ucl.cas.cz/s/bcHbJLCADy8ePos',
+            't9_200.pkl': 'https://data.ucl.cas.cz/s/YQqtkeE6jAcNJpe',
+            't9_50.pkl': 'https://data.ucl.cas.cz/s/Ga4EMKYWGdijBmQ',
+        }
