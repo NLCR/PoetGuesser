@@ -10,7 +10,7 @@ Recognition is based on a feature set combining delexicalized linguistic feature
 - Pretrained models for a number of Czech poets and most frequent poetic meters (given that poetic meters are of immense effect on vocabulary, recognition is always based on texts written in a single meter)
 
 ## Roles
-- Petr Plecháč - principal programmer (nebo něco podobného)
+- Petr Plecháč - main developer
  
 ## Dedication
 National Library of the Czech Republic.
